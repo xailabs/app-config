@@ -30,5 +30,5 @@ export default function resolveProperties(target, property) {
             result[key] = resolveProperties(value, property);
         }
         return result;
-    }, {});
+    }, Array.isArray(target) ? [] : {});
 }
