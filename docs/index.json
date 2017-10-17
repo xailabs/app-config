@@ -567,7 +567,7 @@
     "__docId__": 48,
     "kind": "file",
     "name": "src/getConfig.js",
-    "content": "import deepFreeze from 'deep-freeze';\nimport resolveProperties from './resolveProperties';\nimport loadConfigFile from './loadConfigFile';\n\n\n/**\n * Provides a configuration object based on a given config object and a json file loaded from the filesystem.\n *\n * @param {object} baseConfig - The default configuration before runtime config values are added.\n * @param {object} [options] - An object with additional options\n * @param {string} [options.file] - Absolute path to a json file that will be loaded at runtime.\n * @param {string|array} [options.resolve] - One or more special keys to resolve. \n * @param {boolean} [options.freeze] - Whether to freeze the returned config (and make it read-only)\n * @return {object} A read-only object containing all resolved values from `baseConfig` and `\n *\n * @see https://github.com/electron/electron/blob/master/docs/api/app.md#appgetpathname\n * @see {@link resolveProperties}\n *\n * @example\n * // config.js\n * import { getConfig } from '@xailabs/electron-config';\n * import myConfig from './myConfig.js';\n * import {app} from 'electron';\n *\n * export default getConfig(myConfig, {\n *     file: `${app.getPath('appData')/my-config.json`\n * });\n *\n */\nexport default function getConfig(baseConfig, { file, resolve = [], freeze = true } = {}) {\n    const runtimeConfig = loadConfigFile(file) || {};\n    const mergedConfig = Object.assign({}, baseConfig, runtimeConfig);\n    const parsedConfig = resolveProperties(mergedConfig, resolve);\n    if (freeze) {\n        return deepFreeze(parsedConfig);\n    }\n    else {\n        return parsedConfig;\n    }\n}\n\n",
+    "content": "import deepFreeze from 'deep-freeze';\nimport resolveProperties from './resolveProperties';\nimport loadConfigFile from './loadConfigFile';\n\n/**\n * Provides a configuration object based on a given config object and a json file loaded from the filesystem.\n *\n * @param {object} baseConfig - The default configuration before runtime config values are added.\n * @param {object} [options] - An object with additional options\n * @param {string} [options.file] - Absolute path to a json file that will be loaded at runtime.\n * @param {boolean} [options.freeze=false] - Whether to freeze the returned config (and make it read-only)\n * @param {string|array} [options.resolve=[]] - One or more special keys to resolve. \n * @return {object} A read-only object containing all resolved values from `baseConfig` and `\n *\n * @see https://github.com/electron/electron/blob/master/docs/api/app.md#appgetpathname\n * @see {@link resolveProperties}\n *\n * @example\n * // config.js\n * import { getConfig } from '@xailabs/electron-config';\n * import myConfig from './myConfig.js';\n * import {app} from 'electron';\n *\n * export default getConfig(myConfig, {\n *     file: `${app.getPath('appData')/my-config.json`\n * });\n *\n */\nexport default function getConfig(baseConfig, { file, freeze = false, resolve = [] } = {}) {\n    const runtimeConfig = loadConfigFile(file) || {};\n    const mergedConfig = Object.assign({}, baseConfig, runtimeConfig);\n    const parsedConfig = resolveProperties(mergedConfig, resolve);\n    if (freeze) {\n        return deepFreeze(parsedConfig);\n    } else {\n        return parsedConfig;\n    }\n}\n",
     "static": true,
     "longname": "D:/Projects/xailabs@npm/app-config/src/getConfig.js",
     "access": "public",
@@ -595,7 +595,7 @@
       "https://github.com/electron/electron/blob/master/docs/api/app.md#appgetpathname",
       "{@link resolveProperties}"
     ],
-    "lineNumber": 30,
+    "lineNumber": 29,
     "params": [
       {
         "nullable": null,
@@ -630,23 +630,27 @@
       {
         "nullable": null,
         "types": [
+          "boolean"
+        ],
+        "spread": false,
+        "optional": true,
+        "defaultValue": "false",
+        "defaultRaw": false,
+        "name": "options.freeze",
+        "description": "Whether to freeze the returned config (and make it read-only)"
+      },
+      {
+        "nullable": null,
+        "types": [
           "string",
           "array"
         ],
         "spread": false,
         "optional": true,
+        "defaultValue": "[]",
+        "defaultRaw": [],
         "name": "options.resolve",
         "description": "One or more special keys to resolve."
-      },
-      {
-        "nullable": null,
-        "types": [
-          "boolean"
-        ],
-        "spread": false,
-        "optional": true,
-        "name": "options.freeze",
-        "description": "Whether to freeze the returned config (and make it read-only)"
       }
     ],
     "return": {
@@ -720,7 +724,7 @@
     "__docId__": 53,
     "kind": "file",
     "name": "src/resolveProperties.js",
-    "content": "/**\n * Resolves special non-primitive values in an object.\n *\n * Parses the object recursively and returns a new object where all values\n * that contained a property matching the provided `property` are resolved to the actual value of that property.\n *\n * For example, `{foo: {development: 'foo', production: 'bar'}}` will result in `{foo: 'foo'}` when called with property=`development`,\n * but it will result in `{foo: 'bar'}` when called with property=`production`.\n *\n * @param {object} target - The target object.\n * @param {string|array} property - The name of the property to resolve the value from. Can be array of multiple properties.\n * @returns {Object} - A new object with all values of target, but with resolved values\n */\nexport default function resolveProperties(target, property) {\n    if (Array.isArray(property)) {\n        return property.reduce((result, prop) => resolveProperties(result, prop), target);\n    }\n    if (Object(target) !== target) {\n        // primitive\n        return target;\n    }\n    return Object.keys(target).reduce(function(result, key) {\n        const value = target[key];\n        if (value && value.hasOwnProperty(property)) {\n            result[key] = resolveProperties(value[property], property);\n        } else {\n            result[key] = resolveProperties(value, property);\n        }\n        return result;\n    }, {});\n}\n",
+    "content": "/**\n * Resolves special non-primitive values in an object.\n *\n * Parses the object recursively and returns a new object where all values\n * that contained a property matching the provided `property` are resolved to the actual value of that property.\n *\n * For example, `{foo: {development: 'foo', production: 'bar'}}` will result in `{foo: 'foo'}` when called with property=`development`,\n * but it will result in `{foo: 'bar'}` when called with property=`production`.\n *\n * @param {object} target - The target object.\n * @param {string|array} property - The name of the property to resolve the value from. Can be array of multiple properties.\n * @returns {Object} - A new object with all values of target, but with resolved values\n */\nexport default function resolveProperties(target, property) {\n    if (!property) {\n        return target;\n    }\n    if (Array.isArray(property)) {\n        return property.reduce((result, prop) => resolveProperties(result, prop), target);\n    }\n    if (Object(target) !== target) {\n        // primitive\n        return target;\n    }\n    return Object.keys(target).reduce(function(result, key) {\n        const value = target[key];\n        if (value && value.hasOwnProperty(property)) {\n            result[key] = resolveProperties(value[property], property);\n        } else {\n            result[key] = resolveProperties(value, property);\n        }\n        return result;\n    }, {});\n}\n",
     "static": true,
     "longname": "D:/Projects/xailabs@npm/app-config/src/resolveProperties.js",
     "access": "public",
@@ -790,7 +794,7 @@
   },
   {
     "kind": "packageJSON",
-    "content": "{\n  \"name\": \"@xailabs/app-config\",\n  \"version\": \"1.0.2\",\n  \"description\": \"Manage runtime and compile-time configs\",\n  \"main\": \"lib/index.js\",\n  \"scripts\": {\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\",\n    \"build\": \"rm -rf lib/* && babel src --out-dir lib\",\n    \"docs\": \"esdoc\",\n    \"prepublishOnly\": \"yarn build\"\n  },\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git@gitlab.xailabs.com:james-bond-museum/common-node/app-config.git\"\n  },\n  \"keywords\": [],\n  \"author\": \"Jovica Aleksic <jovica.aleksic@xailabs.de>\",\n  \"license\": \"ISC\",\n  \"devDependencies\": {\n    \"babel-cli\": \"^6.26.0\",\n    \"babel-preset-env\": \"^1.6.0\",\n    \"babel-preset-stage-0\": \"^6.24.1\",\n    \"esdoc\": \"^1.0.3\",\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\"\n  },\n  \"dependencies\": {\n    \"deep-freeze\": \"^0.0.1\"\n  }\n}\n",
+    "content": "{\n  \"name\": \"@xailabs/app-config\",\n  \"version\": \"1.0.4\",\n  \"description\": \"Manage runtime and compile-time configs\",\n  \"main\": \"lib/index.js\",\n  \"scripts\": {\n    \"test\": \"echo \\\"Error: no test specified\\\" && exit 1\",\n    \"build\": \"rm -rf lib/* && babel src --out-dir lib\",\n    \"docs\": \"esdoc\",\n    \"prepublishOnly\": \"yarn build && yarn docs\"\n  },\n  \"repository\": {\n    \"type\": \"git\",\n    \"url\": \"git@gitlab.xailabs.com:james-bond-museum/common-node/app-config.git\"\n  },\n  \"keywords\": [],\n  \"author\": \"Jovica Aleksic <jovica.aleksic@xailabs.de>\",\n  \"license\": \"ISC\",\n  \"devDependencies\": {\n    \"babel-cli\": \"^6.26.0\",\n    \"babel-preset-env\": \"^1.6.0\",\n    \"babel-preset-stage-0\": \"^6.24.1\",\n    \"esdoc\": \"^1.0.3\",\n    \"esdoc-ecmascript-proposal-plugin\": \"^1.0.0\",\n    \"esdoc-standard-plugin\": \"^1.0.0\"\n  },\n  \"dependencies\": {\n    \"deep-freeze\": \"^0.0.1\"\n  }\n}\n",
     "longname": "D:\\Projects\\xailabs@npm\\app-config\\package.json",
     "name": "package.json",
     "static": true,

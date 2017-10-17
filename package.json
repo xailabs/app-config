@@ -1,13 +1,13 @@
 {
   "name": "@xailabs/app-config",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Manage runtime and compile-time configs",
   "main": "lib/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "rm -rf lib/* && babel src --out-dir lib",
     "docs": "esdoc",
-    "prepublishOnly": "yarn build"
+    "prepublishOnly": "yarn build && yarn docs"
   },
   "repository": {
     "type": "git",
