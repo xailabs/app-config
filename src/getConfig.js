@@ -1,4 +1,5 @@
 import deepFreeze from 'deep-freeze';
+import merge from 'lodash.merge';
 import resolveProperties from './resolveProperties';
 import loadConfigFile from './loadConfigFile';
 
@@ -28,7 +29,7 @@ import loadConfigFile from './loadConfigFile';
  */
 export default function getConfig(baseConfig, { file, freeze = false, resolve = [] } = {}) {
     const runtimeConfig = loadConfigFile(file) || {};
-    const mergedConfig = Object.assign({}, baseConfig, runtimeConfig);
+    const mergedConfig = merge({}, baseConfig, runtimeConfig);
     const parsedConfig = resolveProperties(mergedConfig, resolve);
     if (freeze) {
         return deepFreeze(parsedConfig);

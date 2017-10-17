@@ -1,5 +1,6 @@
 ### 1.0.5
 
+- Use `lodash.merge` for deep merging
 - Support arrays (do not reduce to objects)
 
 ### 1.0.4
