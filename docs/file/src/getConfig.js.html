@@ -38,6 +38,7 @@
 
 <div class="content" data-ice="content"><h1 data-ice="title">src/getConfig.js</h1>
 <pre class="source-code line-number raw-source-code"><code class="prettyprint linenums" data-ice="content">import deepFreeze from &apos;deep-freeze&apos;;
+import merge from &apos;lodash.merge&apos;;
 import resolveProperties from &apos;./resolveProperties&apos;;
 import loadConfigFile from &apos;./loadConfigFile&apos;;
 
@@ -67,7 +68,7 @@ import loadConfigFile from &apos;./loadConfigFile&apos;;
  */
 export default function getConfig(baseConfig, { file, freeze = false, resolve = [] } = {}) {
     const runtimeConfig = loadConfigFile(file) || {};
-    const mergedConfig = Object.assign({}, baseConfig, runtimeConfig);
+    const mergedConfig = merge({}, baseConfig, runtimeConfig);
     const parsedConfig = resolveProperties(mergedConfig, resolve);
     if (freeze) {
         return deepFreeze(parsedConfig);
