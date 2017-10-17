@@ -1,20 +1,20 @@
 window.esdocSearchIndex = [
   [
-    "@jbm/app-config/src/getconfig.js~getconfig",
+    "@xailabs/app-config/src/getconfig.js~getconfig",
     "function/index.html#static-function-getConfig",
-    "<span>getConfig</span> <span class=\"search-result-import-path\">@jbm/app-config/src/getConfig.js</span>",
+    "<span>getConfig</span> <span class=\"search-result-import-path\">@xailabs/app-config/src/getConfig.js</span>",
     "function"
   ],
   [
-    "@jbm/app-config/src/loadconfigfile.js~loadconfigfile",
+    "@xailabs/app-config/src/loadconfigfile.js~loadconfigfile",
     "function/index.html#static-function-loadConfigFile",
-    "<span>loadConfigFile</span> <span class=\"search-result-import-path\">@jbm/app-config/src/loadConfigFile.js</span>",
+    "<span>loadConfigFile</span> <span class=\"search-result-import-path\">@xailabs/app-config/src/loadConfigFile.js</span>",
     "function"
   ],
   [
-    "@jbm/app-config/src/resolveproperties.js~resolveproperties",
+    "@xailabs/app-config/src/resolveproperties.js~resolveproperties",
     "function/index.html#static-function-resolveProperties",
-    "<span>resolveProperties</span> <span class=\"search-result-import-path\">@jbm/app-config/src/resolveProperties.js</span>",
+    "<span>resolveProperties</span> <span class=\"search-result-import-path\">@xailabs/app-config/src/resolveProperties.js</span>",
     "function"
   ],
   [

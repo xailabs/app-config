@@ -3,12 +3,12 @@
 <head>
   <meta charset="utf-8">
   <base data-ice="baseUrl">
-  <title data-ice="title">Home | @jbm/app-config</title>
+  <title data-ice="title">Home | @xailabs/app-config</title>
   <link type="text/css" rel="stylesheet" href="css/style.css">
   <link type="text/css" rel="stylesheet" href="css/prettify-tomorrow.css">
   <script src="script/prettify/prettify.js"></script>
   <script src="script/manual.js"></script>
-<meta name="description" content="Manage runtime and compile-time configs"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="@jbm/app-config"><meta property="twitter:description" content="Manage runtime and compile-time configs"></head>
+<meta name="description" content="Manage runtime and compile-time configs"><meta property="twitter:card" content="summary"><meta property="twitter:title" content="@xailabs/app-config"><meta property="twitter:description" content="Manage runtime and compile-time configs"></head>
 <body class="layout-container" data-ice="rootContainer">
 
 <header>
@@ -37,7 +37,57 @@
 </nav>
 
 <div class="content" data-ice="content"><div data-ice="index" class="github-markdown"><h1 id="-xailabs-electron-config">@xailabs/electron-config</h1><p>A helper for managing electron app configuration at compile-time and runtime.</p>
-</div>
+<p><a href="https://xailabs.github.io/app-config/" target="_blank">Documentation</a></p>
+<h2 id="example-usage-in-electron-app-">Example usage in electron app:</h2><p>~/Desktop/config.json</p>
+<pre><code><code class="source-code prettyprint">{
+    &quot;more&quot;: &quot;stuff&quot;,
+    &quot;devstuff&quot;: {
+        &quot;development&quot;: &quot;ok&quot;,
+        &quot;production&quot;: null
+    }
+}</code>
+</code></pre><p>src/config.js</p>
+<pre><code><code class="source-code prettyprint">export default {
+    foo: &apos;foo&apos;,
+    bar: {
+        development: &apos;baz!!!&apos;,
+        production: &apos;bar&apos;
+    }
+};</code>
+</code></pre><p>src/main.js</p>
+<pre><code><code class="source-code prettyprint">import { app } from &apos;electron&apos;;
+import { getConfig } from &apos;@xailabs/app-config&apos;;
+import defaultConfig from &apos;./config&apos;;
+
+// take the config we have and extend it with values from the json file
+const config = getConfig(defaultConfig, {
+
+    // load this external file
+    file: `${app.getPath(&apos;desktop&apos;)}/config.json`,  
+
+    // if you find objects with `development` or `production` keys, resolve them
+    resolve: process.env.NODE_ENV,                  
+
+    // make the config read-only
+    freeze: true                                    
+});
+
+console.log(config);</code>
+</code></pre><p>Resulting config in development build:</p>
+<pre><code><code class="source-code prettyprint">{
+    foo: &apos;foo&apos;,
+    bar: &apos;baz!!!&apos;,
+    more: &apos;stuff&apos;,
+    devstuff: &apos;ok&apos;
+}</code>
+</code></pre><p>Resulting config in production build:</p>
+<pre><code><code class="source-code prettyprint">{
+    foo: &apos;foo&apos;,
+    bar: &apos;bar&apos;,
+    more: &apos;stuff&apos;,
+    devstuff: null
+}</code>
+</code></pre></div>
 </div>
 
 <footer class="footer">
