@@ -1,0 +1,30 @@
+{
+  "name": "@xailabs/app-config",
+  "version": "1.0.0",
+  "description": "Manage runtime and compile-time configs",
+  "main": "lib/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rm -rf lib/* && babel src --out-dir lib",
+    "docs": "esdoc",
+    "prepublishOnly": "yarn build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@gitlab.xailabs.com:james-bond-museum/common-node/app-config.git"
+  },
+  "keywords": [],
+  "author": "Jovica Aleksic <jovica.aleksic@xailabs.de>",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-cli": "^6.26.0",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-stage-0": "^6.24.1",
+    "esdoc": "^1.0.3",
+    "esdoc-ecmascript-proposal-plugin": "^1.0.0",
+    "esdoc-standard-plugin": "^1.0.0"
+  },
+  "dependencies": {
+    "deep-freeze": "^0.0.1"
+  }
+}
