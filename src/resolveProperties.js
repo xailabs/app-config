@@ -12,6 +12,9 @@
  * @returns {Object} - A new object with all values of target, but with resolved values
  */
 export default function resolveProperties(target, property) {
+    if (!property) {
+        return target;
+    }
     if (Array.isArray(property)) {
         return property.reduce((result, prop) => resolveProperties(result, prop), target);
     }

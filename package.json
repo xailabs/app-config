@@ -1,6 +1,6 @@
 {
   "name": "@xailabs/app-config",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "Manage runtime and compile-time configs",
   "main": "lib/index.js",
   "scripts": {
